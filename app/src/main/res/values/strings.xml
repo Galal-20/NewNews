@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NewNews</string>
+    <string name="app_name">Tech News</string>
     <string name="home">home</string>
     <string name="save">save</string>
     <string name="profile">profile</string>
@@ -9,4 +9,5 @@
     <string name="language">Language</string>
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
+    <string name="short_description">From AI breakthroughs to sustainable innovation, the tech world is evolving at a rapid pace. Explore how different regions across the globe are driving change in the digital era</string>
 </resources>

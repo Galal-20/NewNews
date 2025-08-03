@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android") version "2.52"
+    id("kotlin-parcelize")
 
 }
 
@@ -57,13 +58,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // Hilt dependencies
     implementation("com.google.dagger:hilt-android:2.52")
     kapt("com.google.dagger:hilt-android-compiler:2.52")
-    //implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    // Explicitly add javapoet to ensure compatibility
-    kapt("com.squareup:javapoet:1.13.0") // Use 1.13.0, as it's stable with Hilt 2.52
+    kapt("com.squareup:javapoet:1.13.0")
 
 
 
@@ -83,11 +81,14 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
     implementation("com.google.accompanist:accompanist-pager:0.36.0")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.32.0") // For indicators
 
     implementation("androidx.datastore:datastore-preferences:1.1.7")
     // placeholder for loading.
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
+
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation("org.ocpsoft.prettytime:prettytime:5.0.2.Final")
 
 }
 

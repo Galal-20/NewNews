@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toTopOf="@id/customBottomNav"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"
-        tools:ignore="MissingClass" />
+        />
 
     <!-- Custom Bottom Navigation View -->
     <androidx.constraintlayout.widget.ConstraintLayout
