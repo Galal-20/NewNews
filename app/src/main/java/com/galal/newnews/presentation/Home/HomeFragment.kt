@@ -62,7 +62,6 @@ class HomeFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // راقب الـ ViewModel
         lifecycleScope.launchWhenStarted {
             newsViewModel.newState.collect { state ->
                 when (state) {
