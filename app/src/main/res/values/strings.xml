@@ -3,4 +3,10 @@
     <string name="home">home</string>
     <string name="save">save</string>
     <string name="profile">profile</string>
+    <string name="galal_ahmed">Galal Ahmed</string>
+    <string name="email">ga71387@gmail.com</string>
+    <string name="notifications">Notifications</string>
+    <string name="language">Language</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
 </resources>
