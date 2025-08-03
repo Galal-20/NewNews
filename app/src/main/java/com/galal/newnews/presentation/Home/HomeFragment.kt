@@ -20,6 +20,7 @@ import androidx.annotation.RequiresPermission
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
@@ -31,8 +32,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private val newsViewModel: HomeViewModel by viewModels()
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,10 +52,24 @@ class HomeFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.requisites_recycler_view)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBarIndicator)
 
+        val fadeNavOptions = androidx.navigation.navOptions {
+            anim {
+                enter = R.anim.fade_in
+                exit = R.anim.fade_out
+                popEnter = R.anim.fade_in
+                popExit = R.anim.fade_out
+            }
+        }
+
         val adapter = NewsAdapter(emptyList()) { article ->
-            //val intent = Intent(requireContext(), DetailsActivity::class.java)
-            //intent.putExtra("article", article)
-            //startActivity(intent)
+            val bundle = Bundle().apply {
+                putString("title", article.title)
+                putString("imageUrl", article.urlToImage)
+                putString("date", article.publishedAt)
+                putString("content",article.description ?: "No content")
+            }
+
+            findNavController().navigate(R.id.detailsFragment, bundle, fadeNavOptions)
         }
 
         recyclerView.adapter = adapter
@@ -69,9 +82,13 @@ class HomeFragment : Fragment() {
                     is NewsSealedClass.Success -> {
                         progressBar.visibility = View.GONE
                         recyclerView.adapter = NewsAdapter(state.newsResponse.articles) { article ->
-                            //val intent = Intent(requireContext(), DetailsActivity::class.java)
-                            //intent.putExtra("article", article)
-                            //startActivity(intent)
+                            val bundle = Bundle().apply {
+                                putString("title", article.title)
+                                putString("imageUrl", article.urlToImage)
+                                putString("date", article.publishedAt)
+                                putString("content",article.description ?: "No content")
+                            }
+                            findNavController().navigate(R.id.detailsFragment, bundle, fadeNavOptions)
                         }
                     }
                     is NewsSealedClass.Error -> {

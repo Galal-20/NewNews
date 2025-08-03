@@ -45,6 +45,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.favoriteFragment -> selectTab(getString(R.string.save))
                 R.id.profileFragment -> selectTab(getString(R.string.profile))
+                R.id.detailsFragment -> {
+                    selectTab("")
+                }
+
             }
         }
 
