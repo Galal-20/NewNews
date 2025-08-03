@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="splashBackground">#171924</color>"
+    <color name="statusBarColor">#FFFFFF</color>
+    <color name="backgroundColor">#E9ECF1</color>
+    <color name="colorIconSelection">#0267FF</color>
+    <color name="colorIconUnSelection">#000000</color>
+    <color name="backgroundColorScreen">#E9ECF1</color>
 </resources>
