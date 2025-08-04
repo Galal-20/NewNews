@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/backgroundColorScreen"
+    tools:context=".presentation.Details.View.DetailsFragment">
+
+
+    <!-- Image Background -->
+    <ImageView
+        android:id="@+id/news_image"
+        android:layout_width="0dp"
+        android:layout_height="350dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image_placeholder"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/news_content"
+        />
+
+    <!--View Overlay-->
+    <View
+    android:id="@+id/image_overlay"
+    android:layout_width="0dp"
+    android:layout_height="350dp"
+    android:background="#B3000000"
+    app:layout_constraintTop_toTopOf="@id/news_image"
+    app:layout_constraintStart_toStartOf="@id/news_image"
+    app:layout_constraintEnd_toEndOf="@id/news_image"
+    app:layout_constraintBottom_toBottomOf="@id/news_image" />
+
+    <!-- Back Arrow -->
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/icon_back"
+        android:contentDescription="@string/back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--Save Button-->
+    <ImageView
+        android:id="@+id/save_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/save_icon"
+        android:contentDescription="@string/save"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--Share button-->
+    <ImageView
+        android:id="@+id/share_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/share_icon"
+        android:contentDescription="@string/share"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/save_button" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/news_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:text="The rise of global techThe Trends shaping our future "
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="180dp"
+        android:fontFamily="@font/poppins_regular"
+        android:textFontWeight="400"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/news_date"
+
+        />
+
+    <!-- Date -->
+    <TextView
+        android:id="@+id/news_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:text="@string/_3_days_ago"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/poppins_regular"
+        android:textFontWeight="400"
+        app:layout_constraintBottom_toBottomOf="@id/news_image"
+        app:layout_constraintStart_toStartOf="@id/news_title"
+        />
+
+    <!--Author-->
+    <TextView
+        android:id="@+id/author_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:text="@string/author"
+        android:fontFamily="@font/poppins_regular"
+        android:textFontWeight="400"
+        app:layout_constraintTop_toTopOf="@id/news_date"
+        app:layout_constraintBottom_toBottomOf="@id/news_date"
+        app:layout_constraintEnd_toEndOf="@id/news_title"
+        />
+
+
+     <!--Description-->
+    <TextView
+        android:id="@+id/news_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:layout_margin="20dp"
+        android:text="@string/description"
+        android:lineHeight="24dp"
+        android:textFontWeight="400"
+        app:layout_constraintTop_toBottomOf="@id/news_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
