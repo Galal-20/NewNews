@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NewNews">
         <activity
-            android:name=".presentation.Splash.SplashActivity"
+            android:name=".presentation.Splash.View.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

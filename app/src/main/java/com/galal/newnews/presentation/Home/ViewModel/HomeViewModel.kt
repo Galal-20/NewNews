@@ -1,10 +1,12 @@
-package com.galal.newnews.presentation.Home
+package com.galal.newnews.presentation.Home.ViewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.galal.newnews.domain.entities.Article
 import com.galal.newnews.domain.entities.NewsResponse
 import com.galal.newnews.domain.useCase.NewsUseCase
+import com.galal.newnews.domain.useCase.SavedArticlesUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val newsUseCase: NewsUseCase
+    private val newsUseCase: NewsUseCase,
+    private val savedArticlesUseCases: SavedArticlesUseCases
 ): ViewModel(){
 
     private val _newsState = MutableStateFlow<NewsSealedClass>(NewsSealedClass.Idle)
@@ -40,6 +43,23 @@ class HomeViewModel @Inject constructor(
 
         }
     }
+    fun saveArticle(article: Article) {
+        viewModelScope.launch {
+            savedArticlesUseCases.saveArticle(article)
+        }
+    }
+
+    suspend fun getAllSavedArticles(): List<Article> {
+        return savedArticlesUseCases.getAllSavedArticles()
+    }
+
+    fun deleteArticle(article: Article) {
+        viewModelScope.launch {
+            savedArticlesUseCases.deleteArticle(article)
+        }
+    }
+
+
 }
 
 

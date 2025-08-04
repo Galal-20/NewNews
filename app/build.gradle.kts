@@ -4,6 +4,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android") version "2.52"
     id("kotlin-parcelize")
+    id("com.google.devtools.ksp") version "2.0.21-1.0.27" apply false
 
 }
 
@@ -83,15 +84,20 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:0.36.0")
 
     implementation("androidx.datastore:datastore-preferences:1.1.7")
-    // placeholder for loading.
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation("org.ocpsoft.prettytime:prettytime:5.0.2.Final")
 
+    implementation ("androidx.room:room-runtime:2.7.2")
+    kapt ("androidx.room:room-compiler:2.7.2")
+    implementation ("androidx.room:room-ktx:2.7.2")
+
+
 }
 
 kapt{
     correctErrorTypes = true
+
 }

@@ -15,4 +15,6 @@
     <string name="back">back</string>
     <string name="share">Share</string>
     <string name="description">In a world increasingly defined by innovation, technology has become the single most powerful driver of global transformation. From artificial intelligence to quantum computing, tech is not only reshaping industries but also redefining how we live, work, and connect. One of the most significant trends is the acceleration of AI integration across sectors. From healthcare diagnostics to financial forecasting, machine learning algorithms are streamlining decision-making processes and opening up new possibilities. Meanwhile, the rise of generative AI tools is reshaping content creation, code development, and even product design.</string>
+    <string name="_3_days_ago">3 days ago</string>
+    <string name="author">Author</string>
 </resources>

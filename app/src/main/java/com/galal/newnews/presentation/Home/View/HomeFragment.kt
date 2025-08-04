@@ -1,4 +1,4 @@
-package com.galal.newnews.presentation.Home
+package com.galal.newnews.presentation.Home.View
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,7 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.galal.newnews.R
-import com.galal.newnews.utils.ShareFunctions
+import com.galal.newnews.presentation.Home.Adapter.NewsAdapter
+import com.galal.newnews.presentation.Home.ViewModel.HomeViewModel
+import com.galal.newnews.presentation.Home.ViewModel.NewsSealedClass
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
                 isConnected = true
                 activity?.runOnUiThread {
                     val noInternetAnimation = view?.findViewById<LottieAnimationView>(R.id.noInternetAnimation)
-                    val progressBarIndicator = view?.findViewById<ProgressBar>(R.id.progressBarIndicator)
+                    val progressBarIndicator = view?.findViewById<LottieAnimationView>(R.id.progressBarIndicator)
                     val dataContainer = view?.findViewById<RecyclerView>(R.id.requisites_recycler_view)
                     noInternetAnimation?.visibility = View.GONE
                     progressBarIndicator?.visibility = View.VISIBLE
@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
                 isConnected = false
                 activity?.runOnUiThread {
                     val noInternetAnimation = view?.findViewById<LottieAnimationView>(R.id.noInternetAnimation)
-                    val progressBarIndicator = view?.findViewById<ProgressBar>(R.id.progressBarIndicator)
+                    val progressBarIndicator = view?.findViewById<LottieAnimationView>(R.id.progressBarIndicator)
                     val dataContainer = view?.findViewById<RecyclerView>(R.id.requisites_recycler_view)
                     progressBarIndicator?.visibility = View.GONE
                     dataContainer?.visibility = View.GONE
@@ -87,7 +87,7 @@ class HomeFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.requisites_recycler_view)
         val noInternetAnimation = view.findViewById<LottieAnimationView>(R.id.noInternetAnimation)
-        var progressBarIndicator = view.findViewById<ProgressBar>(R.id.progressBarIndicator)
+        var progressBarIndicator = view.findViewById<LottieAnimationView>(R.id.progressBarIndicator)
 
 
         progressBarIndicator.visibility = View.VISIBLE
@@ -100,14 +100,6 @@ class HomeFragment : Fragment() {
             .build()
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
 
-        val isConnected = ShareFunctions.isInternetAvailable(requireContext())
-        if (!isConnected) {
-            progressBarIndicator.visibility = View.GONE
-            recyclerView.visibility = View.GONE
-            noInternetAnimation.visibility = View.VISIBLE
-        } else {
-            newsViewModel.getNews()
-        }
 
         val fadeNavOptions = androidx.navigation.navOptions {
             anim {
@@ -118,16 +110,33 @@ class HomeFragment : Fragment() {
             }
         }
 
-        adapter = NewsAdapter(mutableListOf()) { article ->
-            val bundle = Bundle().apply {
-                putString("title", article.title)
-                putString("imageUrl", article.urlToImage)
-                putString("date", article.publishedAt)
-                putString("content", article.description ?: "No content")
-                putString("author", article.author)
+
+        adapter = NewsAdapter(
+            mutableListOf(),
+            onReadMoreClick = { article ->
+                val bundle = Bundle().apply {
+                    putString("title", article.title)
+                    putString("imageUrl", article.urlToImage)
+                    putString("date", article.publishedAt)
+                    putString("content", article.description ?: "No content")
+                    putString("author", article.author)
+                    putString("url", article.url)
+                }
+                findNavController().navigate(R.id.detailsFragment, bundle, fadeNavOptions)
+            },
+            onSaveClick = { article, isSaved ->
+                if(isSaved){
+                    newsViewModel.deleteArticle(article)
+                    Snackbar.make(view, "Article deleted", Snackbar.LENGTH_SHORT).show()
+                    adapter.notifyDataSetChanged()
+                }else{
+                    newsViewModel.saveArticle(article)
+                    Snackbar.make(view, "Article saved", Snackbar.LENGTH_SHORT).show()
+                    adapter.notifyDataSetChanged()
+                }
+
             }
-            findNavController().navigate(R.id.detailsFragment, bundle, fadeNavOptions)
-        }
+        )
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -148,21 +157,18 @@ class HomeFragment : Fragment() {
                             noInternetAnimation.visibility = View.VISIBLE
                             recyclerView.visibility = View.GONE
                         } else {
-                            Snackbar.make(view, "No new data", Snackbar.LENGTH_SHORT).show()
+                            //Snackbar.make(view, "No new data", Snackbar.LENGTH_SHORT).show()
                         }
                     }
                     else -> Unit
                 }
             }
         }
+        lifecycleScope.launch {
+            val savedArticles = newsViewModel.getAllSavedArticles()
+            adapter.setSavedArticles(savedArticles)
+        }
     }
-
-    /*private fun isInternetAvailable(): Boolean {
-        val connectivityManager = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

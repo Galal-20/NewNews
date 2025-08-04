@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundColorScreen"
-    tools:context=".presentation.Details.DetailsFragment">
+    tools:context=".presentation.Details.View.DetailsFragment">
 
 
     <!-- Image Background -->
@@ -21,6 +21,17 @@
         app:layout_constraintBottom_toTopOf="@id/news_content"
         />
 
+    <!--View Overlay-->
+    <View
+    android:id="@+id/image_overlay"
+    android:layout_width="0dp"
+    android:layout_height="350dp"
+    android:background="#B3000000"
+    app:layout_constraintTop_toTopOf="@id/news_image"
+    app:layout_constraintStart_toStartOf="@id/news_image"
+    app:layout_constraintEnd_toEndOf="@id/news_image"
+    app:layout_constraintBottom_toBottomOf="@id/news_image" />
+
     <!-- Back Arrow -->
     <ImageView
         android:id="@+id/back_button"
@@ -33,6 +44,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!--Save Button-->
     <ImageView
         android:id="@+id/save_button"
         android:layout_width="24dp"
@@ -45,6 +57,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!--Share button-->
     <ImageView
         android:id="@+id/share_button"
         android:layout_width="24dp"
@@ -83,7 +96,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:textSize="12sp"
-        android:text="3 days ago"
+        android:text="@string/_3_days_ago"
         android:layout_marginBottom="20dp"
         android:fontFamily="@font/poppins_regular"
         android:textFontWeight="400"
@@ -98,7 +111,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:textSize="12sp"
-        android:text="3 days ago"
+        android:text="@string/author"
         android:fontFamily="@font/poppins_regular"
         android:textFontWeight="400"
         app:layout_constraintTop_toTopOf="@id/news_date"
@@ -117,6 +130,7 @@
         android:layout_margin="20dp"
         android:text="@string/description"
         android:lineHeight="24dp"
+        android:textFontWeight="400"
         app:layout_constraintTop_toBottomOf="@id/news_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

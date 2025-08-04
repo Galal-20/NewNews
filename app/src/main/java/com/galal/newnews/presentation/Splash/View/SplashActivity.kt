@@ -1,16 +1,13 @@
-package com.galal.newnews.presentation.Splash
+package com.galal.newnews.presentation.Splash.View
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import com.galal.newnews.MainActivity
 import com.galal.newnews.R
-import com.galal.newnews.presentation.Home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
