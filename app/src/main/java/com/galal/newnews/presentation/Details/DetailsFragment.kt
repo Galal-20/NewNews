@@ -13,10 +13,6 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.galal.newnews.R
 import com.galal.newnews.utils.ShareFunctions.Companion.getTimeAgo
-import org.ocpsoft.prettytime.PrettyTime
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 
 class DetailsFragment : Fragment() {
 
@@ -46,10 +42,12 @@ class DetailsFragment : Fragment() {
         val imageUrl = arguments?.getString("imageUrl")
         val date = arguments?.getString("date")
         val content = arguments?.getString("content")
+        val author = arguments?.getString("author")
 
         view.findViewById<TextView>(R.id.news_title).text = title
         view.findViewById<TextView>(R.id.news_date).text = getTimeAgo(date)
         view.findViewById<TextView>(R.id.news_content).text = content
+        view.findViewById<TextView>(R.id.author_date).text = author
 
         Glide.with(this)
             .load(imageUrl)
@@ -63,20 +61,6 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    /*@RequiresApi(Build.VERSION_CODES.R)
-    override fun onDestroyView() {
-        super.onDestroyView()
-        requireActivity().window.setDecorFitsSystemWindows(true)
-    }*/
-
-    /*override fun onDestroyView() {
-        super.onDestroyView()
-        requireActivity().window.decorView.windowInsetsController?.show(
-            android.view.WindowInsets.Type.statusBars()
-        )
-    }*/
-
-
-
 
 }
+

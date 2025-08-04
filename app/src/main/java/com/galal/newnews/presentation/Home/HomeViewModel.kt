@@ -21,15 +21,16 @@ class HomeViewModel @Inject constructor(
     private val _newsState = MutableStateFlow<NewsSealedClass>(NewsSealedClass.Idle)
     val newState: StateFlow<NewsSealedClass> = _newsState
 
-    init {
-        getNews()
-    }
+    var lastSuccessData :NewsResponse? = null
+        private set
+
 
     fun getNews(){
         _newsState.value = NewsSealedClass.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = newsUseCase.invoke()
+                lastSuccessData = response
                 _newsState.value = NewsSealedClass.Success(response)
                 Log.d("NewsData", "getNews: ${response.articles}")
             }catch (e: Exception){

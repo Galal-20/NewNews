@@ -17,7 +17,9 @@
         android:src="@drawable/image_placeholder"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/news_content"
+        />
 
     <!-- Back Arrow -->
     <ImageView
@@ -65,12 +67,11 @@
         android:text="The rise of global techThe Trends shaping our future "
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="180dp"
         android:fontFamily="@font/poppins_regular"
         android:textFontWeight="400"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/back_button"
         app:layout_constraintBottom_toTopOf="@id/news_date"
 
         />
@@ -83,12 +84,28 @@
         android:textColor="@android:color/white"
         android:textSize="12sp"
         android:text="3 days ago"
+        android:layout_marginBottom="20dp"
         android:fontFamily="@font/poppins_regular"
         android:textFontWeight="400"
-        app:layout_constraintTop_toBottomOf="@id/news_title"
         app:layout_constraintBottom_toBottomOf="@id/news_image"
         app:layout_constraintStart_toStartOf="@id/news_title"
         />
+
+    <!--Author-->
+    <TextView
+        android:id="@+id/author_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:text="3 days ago"
+        android:fontFamily="@font/poppins_regular"
+        android:textFontWeight="400"
+        app:layout_constraintTop_toTopOf="@id/news_date"
+        app:layout_constraintBottom_toBottomOf="@id/news_date"
+        app:layout_constraintEnd_toEndOf="@id/news_title"
+        />
+
 
      <!--Description-->
     <TextView

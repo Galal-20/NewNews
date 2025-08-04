@@ -1,9 +1,6 @@
 package com.galal.newnews.presentation.Home
 
-import android.Manifest
-import android.app.Activity.RESULT_OK
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -15,9 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresPermission
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,18 +19,58 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.galal.newnews.R
+import com.galal.newnews.utils.ShareFunctions
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private val newsViewModel: HomeViewModel by viewModels()
+    private var isConnected = false
+
+
+
+    private lateinit var connectivityManager: ConnectivityManager
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            if (!isConnected) {
+                isConnected = true
+                activity?.runOnUiThread {
+                    val noInternetAnimation = view?.findViewById<LottieAnimationView>(R.id.noInternetAnimation)
+                    val progressBarIndicator = view?.findViewById<ProgressBar>(R.id.progressBarIndicator)
+                    val dataContainer = view?.findViewById<RecyclerView>(R.id.requisites_recycler_view)
+                    noInternetAnimation?.visibility = View.GONE
+                    progressBarIndicator?.visibility = View.VISIBLE
+                    dataContainer?.visibility = View.GONE
+                    newsViewModel.getNews()
+                }
+            }
+        }
+
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            if (isConnected) {
+                isConnected = false
+                activity?.runOnUiThread {
+                    val noInternetAnimation = view?.findViewById<LottieAnimationView>(R.id.noInternetAnimation)
+                    val progressBarIndicator = view?.findViewById<ProgressBar>(R.id.progressBarIndicator)
+                    val dataContainer = view?.findViewById<RecyclerView>(R.id.requisites_recycler_view)
+                    progressBarIndicator?.visibility = View.GONE
+                    dataContainer?.visibility = View.GONE
+                    noInternetAnimation?.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        connectivityManager = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
     override fun onCreateView(
@@ -49,8 +83,31 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        lateinit var adapter: NewsAdapter
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.requisites_recycler_view)
-        val progressBar = view.findViewById<ProgressBar>(R.id.progressBarIndicator)
+        val noInternetAnimation = view.findViewById<LottieAnimationView>(R.id.noInternetAnimation)
+        var progressBarIndicator = view.findViewById<ProgressBar>(R.id.progressBarIndicator)
+
+
+        progressBarIndicator.visibility = View.VISIBLE
+        noInternetAnimation.visibility = View.GONE
+
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+
+        val isConnected = ShareFunctions.isInternetAvailable(requireContext())
+        if (!isConnected) {
+            progressBarIndicator.visibility = View.GONE
+            recyclerView.visibility = View.GONE
+            noInternetAnimation.visibility = View.VISIBLE
+        } else {
+            newsViewModel.getNews()
+        }
 
         val fadeNavOptions = androidx.navigation.navOptions {
             anim {
@@ -61,39 +118,38 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val adapter = NewsAdapter(emptyList()) { article ->
+        adapter = NewsAdapter(mutableListOf()) { article ->
             val bundle = Bundle().apply {
                 putString("title", article.title)
                 putString("imageUrl", article.urlToImage)
                 putString("date", article.publishedAt)
-                putString("content",article.description ?: "No content")
+                putString("content", article.description ?: "No content")
+                putString("author", article.author)
             }
-
             findNavController().navigate(R.id.detailsFragment, bundle, fadeNavOptions)
         }
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             newsViewModel.newState.collect { state ->
                 when (state) {
-                    is NewsSealedClass.Loading -> progressBar.visibility = View.VISIBLE
+                    is NewsSealedClass.Loading -> progressBarIndicator.visibility = View.VISIBLE
                     is NewsSealedClass.Success -> {
-                        progressBar.visibility = View.GONE
-                        recyclerView.adapter = NewsAdapter(state.newsResponse.articles) { article ->
-                            val bundle = Bundle().apply {
-                                putString("title", article.title)
-                                putString("imageUrl", article.urlToImage)
-                                putString("date", article.publishedAt)
-                                putString("content",article.description ?: "No content")
-                            }
-                            findNavController().navigate(R.id.detailsFragment, bundle, fadeNavOptions)
-                        }
+                        progressBarIndicator.visibility = View.GONE
+                        adapter.updateNews(state.newsResponse.articles)
+                        recyclerView.visibility = View.VISIBLE
+                        noInternetAnimation.visibility = View.GONE
                     }
                     is NewsSealedClass.Error -> {
-                        progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), "Error: ${state.message}", Toast.LENGTH_SHORT).show()
+                        progressBarIndicator.visibility = View.GONE
+                        if (newsViewModel.lastSuccessData == null) {
+                            noInternetAnimation.visibility = View.VISIBLE
+                            recyclerView.visibility = View.GONE
+                        } else {
+                            Snackbar.make(view, "No new data", Snackbar.LENGTH_SHORT).show()
+                        }
                     }
                     else -> Unit
                 }
@@ -101,4 +157,17 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /*private fun isInternetAvailable(): Boolean {
+        val connectivityManager = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }*/
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        connectivityManager.unregisterNetworkCallback(networkCallback)
+    }
+
 }
+

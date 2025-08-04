@@ -12,7 +12,7 @@ import com.galal.newnews.domain.entities.Article
 import com.galal.newnews.utils.ShareFunctions.Companion.getTimeAgo
 
 class NewsAdapter(
-    private val articles: List<Article>,
+    private val articles: MutableList<Article>,
     private val onReadMoreClick: (Article) -> Unit
 ) : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
@@ -46,16 +46,9 @@ class NewsAdapter(
 
     override fun getItemCount(): Int = articles.size
 
-   /* fun getTimeAgo(publishedAt: String?): String {
-        return try {
-            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-            format.timeZone = TimeZone.getTimeZone("UTC")
-            val date = format.parse(publishedAt ?: "") ?: return "Unknown time"
-
-            val prettyTime = PrettyTime(Locale.getDefault())
-            prettyTime.format(date)
-        } catch (e: Exception) {
-            "Unknown time"
-        }
-    }*/
+    fun updateNews(newArticles: List<Article>) {
+        articles.clear()
+        articles.addAll(newArticles)
+        notifyDataSetChanged()
+    }
 }
