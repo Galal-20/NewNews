@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,7 +19,7 @@ import com.galal.newnews.R
 import com.galal.newnews.domain.entities.Article
 import com.galal.newnews.presentation.Home.ViewModel.HomeViewModel
 import com.galal.newnews.utils.ShareFunctions.Companion.getTimeAgo
-import com.google.android.material.snackbar.Snackbar
+import com.galal.newnews.utils.ShareFunctions.Companion.showCustomSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -85,12 +86,22 @@ class DetailsFragment : Fragment() {
                 if (isSaved) {
                     newsViewModel.deleteArticle(article)
                     saveButton.setImageResource(R.drawable.save_icon)
-                    Snackbar.make(view, "Article deleted", Snackbar.LENGTH_SHORT).show()
+                    showCustomSnackbar(
+                        view = view,
+                        message = getString(R.string.article_deleted_successfully),
+                        backgroundColor = ContextCompat.getColor(requireContext(), R.color.green),
+                        textColor = ContextCompat.getColor(requireContext(), R.color.white)
+                    )
                     isSaved = false
                 } else {
                     newsViewModel.saveArticle(article)
                     saveButton.setImageResource(R.drawable.saved_filled)
-                    Snackbar.make(view, "Article saved", Snackbar.LENGTH_SHORT).show()
+                    showCustomSnackbar(
+                        view = view,
+                        message = getString(R.string.article_saved_successfully),
+                        backgroundColor = ContextCompat.getColor(requireContext(), R.color.green),
+                        textColor = ContextCompat.getColor(requireContext(), R.color.white)
+                    )
                     isSaved = true
                 }
             }

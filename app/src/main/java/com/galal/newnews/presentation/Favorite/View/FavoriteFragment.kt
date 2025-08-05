@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.galal.newnews.R
 import com.galal.newnews.presentation.Favorite.ViewModel.FavoriteViewModel
 import com.galal.newnews.presentation.Home.Adapter.NewsAdapter
-import com.google.android.material.snackbar.Snackbar
+import com.galal.newnews.utils.ShareFunctions.Companion.showCustomSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -62,7 +63,12 @@ class FavoriteFragment : Fragment() {
             onSaveClick = { article, isSaved ->
                 if(isSaved){
                     viewModel.deleteArticle(article)
-                    Snackbar.make(view, "Article deleted", Snackbar.LENGTH_SHORT).show()
+                    showCustomSnackbar(
+                        view = view,
+                        message = getString(R.string.article_deleted_successfully),
+                        backgroundColor = ContextCompat.getColor(requireContext(), R.color.green),
+                        textColor = ContextCompat.getColor(requireContext(), R.color.white)
+                    )
                     viewModel.loadSavedArticles()
                 }
 

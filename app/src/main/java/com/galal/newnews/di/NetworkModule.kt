@@ -7,6 +7,7 @@ import com.galal.newnews.data.local.SavedArticleDao
 import com.galal.newnews.data.remote.ApiService
 import com.galal.newnews.data.repoImpl.SavedArticlesRepoImpl
 import com.galal.newnews.domain.repo.SavedArticlesRepo
+import com.galal.newnews.utils.ApiKeyManager
 import com.galal.newnews.utils.Constants.api_key
 import com.galal.newnews.utils.Constants.url_api
 import dagger.Module
@@ -26,13 +27,15 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val original = chain.request()
                 val originalUrl = original.url
+                val apiKey = ApiKeyManager.getApiKey(context)
+
                 val url = originalUrl.newBuilder()
-                    .addQueryParameter("apiKey", api_key)
+                    .addQueryParameter("apiKey", apiKey)
                     .build()
                 val requestBuilder = original.newBuilder().url(url)
                 chain.proceed(requestBuilder.build())

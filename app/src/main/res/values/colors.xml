@@ -9,4 +9,6 @@
     <color name="colorIconSelection">#0267FF</color>
     <color name="colorIconUnSelection">#000000</color>
     <color name="backgroundColorScreen">#E9ECF1</color>
+    <color name="green">#4CAF50</color>
+    <color name="red">#FF0058</color>
 </resources>
