@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,8 +20,8 @@ import com.airbnb.lottie.LottieAnimationView
 import com.galal.newnews.R
 import com.galal.newnews.presentation.Home.Adapter.NewsAdapter
 import com.galal.newnews.presentation.Home.ViewModel.HomeViewModel
-import com.galal.newnews.presentation.Home.ViewModel.NewsSealedClass
-import com.google.android.material.snackbar.Snackbar
+import com.galal.newnews.presentation.Home.ViewModel.States.NewsState
+import com.galal.newnews.utils.ShareFunctions.Companion.showCustomSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -127,11 +128,21 @@ class HomeFragment : Fragment() {
             onSaveClick = { article, isSaved ->
                 if(isSaved){
                     newsViewModel.deleteArticle(article)
-                    Snackbar.make(view, "Article deleted", Snackbar.LENGTH_SHORT).show()
+                    showCustomSnackbar(
+                        view = view,
+                        message = getString(R.string.article_deleted_successfully),
+                        backgroundColor = ContextCompat.getColor(requireContext(), R.color.green),
+                        textColor = ContextCompat.getColor(requireContext(), R.color.white)
+                    )
                     adapter.notifyDataSetChanged()
                 }else{
                     newsViewModel.saveArticle(article)
-                    Snackbar.make(view, "Article saved", Snackbar.LENGTH_SHORT).show()
+                    showCustomSnackbar(
+                        view = view,
+                        message = getString(R.string.article_saved_successfully),
+                        backgroundColor = ContextCompat.getColor(requireContext(), R.color.green),
+                        textColor = ContextCompat.getColor(requireContext(), R.color.white)
+                    )
                     adapter.notifyDataSetChanged()
                 }
 
@@ -144,20 +155,25 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             newsViewModel.newState.collect { state ->
                 when (state) {
-                    is NewsSealedClass.Loading -> progressBarIndicator.visibility = View.VISIBLE
-                    is NewsSealedClass.Success -> {
+                    is NewsState.Loading -> progressBarIndicator.visibility = View.VISIBLE
+                    is NewsState.Success -> {
                         progressBarIndicator.visibility = View.GONE
                         adapter.updateNews(state.newsResponse.articles)
                         recyclerView.visibility = View.VISIBLE
                         noInternetAnimation.visibility = View.GONE
                     }
-                    is NewsSealedClass.Error -> {
+                    is NewsState.Error -> {
                         progressBarIndicator.visibility = View.GONE
                         if (newsViewModel.lastSuccessData == null) {
                             noInternetAnimation.visibility = View.VISIBLE
                             recyclerView.visibility = View.GONE
                         } else {
-                            //Snackbar.make(view, "No new data", Snackbar.LENGTH_SHORT).show()
+                            showCustomSnackbar(
+                                view = view,
+                                message = "No new data",
+                                backgroundColor = ContextCompat.getColor(requireContext(), R.color.red),
+                                textColor = ContextCompat.getColor(requireContext(), R.color.white)
+                            )
                         }
                     }
                     else -> Unit
@@ -174,6 +190,8 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         connectivityManager.unregisterNetworkCallback(networkCallback)
     }
+
+
 
 }
 

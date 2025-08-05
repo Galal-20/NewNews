@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.galal.newnews.domain.entities.Article
-import com.galal.newnews.domain.useCase.SavedArticlesUseCases
+import com.galal.newnews.domain.useCase.ImplUseCase.SavedArticlesUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
